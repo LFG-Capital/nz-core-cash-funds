@@ -32,6 +32,14 @@ npm run dev
 
 The app serves on [http://127.0.0.1:43173](http://127.0.0.1:43173).
 
+## Hosted page
+
+The static export is published to GitHub Pages:
+
+**[https://lfg-capital.github.io/nz-core-cash-funds/](https://lfg-capital.github.io/nz-core-cash-funds/)**
+
+Pushes to `main` rebuild and redeploy it.
+
 ## Layout
 
 | Path | Role |
