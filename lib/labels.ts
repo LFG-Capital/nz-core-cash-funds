@@ -1,0 +1,11 @@
+import type { Vehicle } from "@/lib/funds";
+
+export function vehicleBadge(
+  vehicle: Vehicle,
+): "kiwi" | "retail" | "etf" | "work" | "closed" {
+  if (vehicle === "KiwiSaver") return "kiwi";
+  if (vehicle === "ETF") return "etf";
+  if (vehicle === "Workplace / Super") return "work";
+  if (vehicle === "Closed") return "closed";
+  return "retail";
+}
