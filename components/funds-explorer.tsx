@@ -6,14 +6,17 @@ import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
+  GENIUS_RESERVES,
   SETTLEMENT_HINT,
   SETTLEMENTS,
   funds,
+  type GeniusReserve,
   type Settlement,
   type Style,
   type Vehicle,
 } from "@/lib/funds";
-import { vehicleBadge } from "@/lib/labels";
+import { assessGenius } from "@/lib/genius";
+import { geniusBadge, vehicleBadge } from "@/lib/labels";
 import { formatDate, formatNzdMillion, formatPct } from "@/lib/utils";
 
 const settlementRank: Record<Settlement, number> = {
@@ -47,36 +50,46 @@ export function FundsExplorer() {
   const [vehicle, setVehicle] = useState<(typeof vehicles)[number]>("All");
   const [style, setStyle] = useState<(typeof styles)[number]>("All");
   const [settlement, setSettlement] = useState<"All" | Settlement>("All");
-  const [sort, setSort] = useState<"fum" | "fee" | "return" | "name" | "liquidity">("fum");
+  const [genius, setGenius] = useState<"All" | GeniusReserve>("All");
+  const [sort, setSort] = useState<"fum" | "fee" | "return" | "name" | "liquidity" | "wam">("fum");
+
+  const scored = useMemo(
+    () => funds.map((fund) => ({ fund, genius: assessGenius(fund, funds) })),
+    [],
+  );
 
   const rows = useMemo(() => {
-    const filtered = funds.filter((fund) => {
+    const filtered = scored.filter(({ fund, genius: screen }) => {
       const haystack =
-        `${fund.name} ${fund.manager} ${fund.fnd ?? ""} ${fund.benchmark} ${fund.settlement} ${fund.liquidity}`.toLowerCase();
+        `${fund.name} ${fund.manager} ${fund.fnd ?? ""} ${fund.benchmark} ${fund.settlement} ${fund.liquidity} ${screen.reserve} ${screen.summary} ${screen.note}`.toLowerCase();
       const matchesQuery = haystack.includes(query.trim().toLowerCase());
       const matchesVehicle = vehicle === "All" || fund.vehicle === vehicle;
       const matchesStyle = style === "All" || fund.style === style;
       const matchesSettlement = settlement === "All" || fund.settlement === settlement;
-      return matchesQuery && matchesVehicle && matchesStyle && matchesSettlement;
+      const matchesGenius = genius === "All" || screen.reserve === genius;
+      return matchesQuery && matchesVehicle && matchesStyle && matchesSettlement && matchesGenius;
     });
 
     return filtered.sort((a, b) => {
-      if (sort === "name") return a.name.localeCompare(b.name);
-      if (sort === "fee") return (a.feePercent ?? 99) - (b.feePercent ?? 99);
+      if (sort === "name") return a.fund.name.localeCompare(b.fund.name);
+      if (sort === "fee") return (a.fund.feePercent ?? 99) - (b.fund.feePercent ?? 99);
       if (sort === "liquidity") {
-        return settlementRank[a.settlement] - settlementRank[b.settlement];
+        return settlementRank[a.fund.settlement] - settlementRank[b.fund.settlement];
+      }
+      if (sort === "wam") {
+        return (a.genius.wadDays ?? 9_999) - (b.genius.wadDays ?? 9_999);
       }
       if (sort === "return") {
-        return (b.return3yAfterFeesTax ?? -1) - (a.return3yAfterFeesTax ?? -1);
+        return (b.fund.return3yAfterFeesTax ?? -1) - (a.fund.return3yAfterFeesTax ?? -1);
       }
-      return (b.fumMillion ?? -1) - (a.fumMillion ?? -1);
+      return (b.fund.fumMillion ?? -1) - (a.fund.fumMillion ?? -1);
     });
-  }, [query, vehicle, style, settlement, sort]);
+  }, [query, vehicle, style, settlement, genius, sort, scored]);
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-3 md:grid-cols-4 lg:grid-cols-5">
-        <label className="md:col-span-2">
+      <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-6">
+        <label className="md:col-span-3 lg:col-span-2">
           <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Search
           </span>
@@ -137,6 +150,25 @@ export function FundsExplorer() {
             ))}
           </select>
         </label>
+        <label>
+          <span className="mb-1 block text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            GENIUS reserve
+          </span>
+          <select
+            className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+            value={genius}
+            onChange={(event) =>
+              setGenius(event.target.value as "All" | GeniusReserve)
+            }
+          >
+            <option value="All">All</option>
+            {GENIUS_RESERVES.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
@@ -156,18 +188,20 @@ export function FundsExplorer() {
             <option value="fee">Fee (lowest)</option>
             <option value="return">3-year return</option>
             <option value="liquidity">Liquidity (fastest)</option>
+            <option value="wam">GENIUS WAM (shortest)</option>
             <option value="name">Name</option>
           </select>
         </label>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-border bg-card">
-        <table className="min-w-[980px] w-full text-left text-sm">
+        <table className="min-w-[1120px] w-full text-left text-sm">
           <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-3 py-3 font-medium">Fund</th>
               <th className="px-3 py-3 font-medium">Vehicle</th>
               <th className="px-3 py-3 font-medium">Liquidity</th>
+              <th className="px-3 py-3 font-medium">GENIUS reserve</th>
               <th className="px-3 py-3 font-medium">FUM</th>
               <th className="px-3 py-3 font-medium">Fee</th>
               <th className="px-3 py-3 font-medium">3y ret.</th>
@@ -178,12 +212,12 @@ export function FundsExplorer() {
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-3 py-10 text-center text-muted-foreground">
+                <td colSpan={9} className="px-3 py-10 text-center text-muted-foreground">
                   No funds match those filters. Clear search or switch vehicle.
                 </td>
               </tr>
             ) : (
-              rows.map((fund) => (
+              rows.map(({ fund, genius: screen }) => (
                 <tr key={fund.slug} className="border-t border-border/80 hover:bg-muted/40">
                   <td className="px-3 py-3">
                     <Link href={`/funds/${fund.slug}`} className="font-medium text-foreground hover:text-primary">
@@ -203,6 +237,12 @@ export function FundsExplorer() {
                     <p className="text-xs text-muted-foreground">
                       {SETTLEMENT_HINT[fund.settlement]}
                     </p>
+                  </td>
+                  <td className="px-3 py-3">
+                    <Badge variant={geniusBadge(screen.reserve)}>
+                      {screen.reserve}
+                    </Badge>
+                    <p className="mt-1 text-xs text-muted-foreground">{screen.summary}</p>
                   </td>
                   <td className="px-3 py-3 tabular-nums">
                     {formatNzdMillion(fund.fumMillion)}

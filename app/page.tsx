@@ -150,6 +150,15 @@ export default function HomePage() {
                 itself is cash.
               </li>
               <li>
+                <strong className="text-foreground">GENIUS reserve</strong>{" "}
+                scores liquidity and duration against the US permitted-reserve
+                list. Duration is the value-weighted remaining maturity of
+                named holdings (call = 0; notice paper uses the notice
+                period; dated paper uses legal maturity). A single name
+                outside 93 days does not fail the book. The OCC analog caps
+                portfolio WAM at 20 days.
+              </li>
+              <li>
                 Bank on-call PIEs and term-deposit PIEs sold as deposit products
                 are out of scope unless they file as a managed investment
                 scheme.

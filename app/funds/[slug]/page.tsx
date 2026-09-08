@@ -2,8 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { SETTLEMENT_HINT, funds, getFund } from "@/lib/funds";
-import { vehicleBadge } from "@/lib/labels";
+import { GENIUS_HINT, SETTLEMENT_HINT, funds, getFund } from "@/lib/funds";
+import { assessGenius, formatGeniusWad, formatHoldingTenor, holdingTenorDays } from "@/lib/genius";
+import { geniusBadge, vehicleBadge } from "@/lib/labels";
 import { formatDate, formatNzdMillion, formatPct } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -29,6 +30,8 @@ export default async function FundPage({
   const { slug } = await params;
   const fund = getFund(slug);
   if (!fund) notFound();
+  const genius = assessGenius(fund, funds);
+  const asOf = fund.fumAsOf ? new Date(`${fund.fumAsOf}T00:00:00Z`) : null;
 
   const facts = [
     { label: "FUM", value: formatNzdMillion(fund.fumMillion), hint: formatDate(fund.fumAsOf) },
@@ -37,6 +40,7 @@ export default async function FundPage({
     { label: "1-year return", value: formatPct(fund.return1yAfterFeesTax), hint: fund.return1yAfterFeesBeforeTax !== undefined ? `${formatPct(fund.return1yAfterFeesBeforeTax)} before tax` : "After fees and tax" },
     { label: "Risk indicator", value: fund.riskIndicator ? `${fund.riskIndicator} / 7` : "—", hint: "FMA scale" },
     { label: "Investors", value: fund.members ? fund.members.toLocaleString("en-NZ") : "—", hint: "Where disclosed" },
+    { label: "GENIUS reserve", value: genius.reserve, hint: genius.summary },
   ];
 
   return (
@@ -51,6 +55,9 @@ export default async function FundPage({
             <Badge variant="muted">{fund.style}</Badge>
             {fund.pie ? <Badge variant="outline">PIE</Badge> : null}
             {!fund.open ? <Badge variant="closed">Closed</Badge> : null}
+            <Badge variant={geniusBadge(genius.reserve)}>
+              GENIUS {genius.reserve}
+            </Badge>
           </div>
           <h1 className="mt-3 font-serif text-4xl">{fund.name}</h1>
           <p className="mt-2 text-muted-foreground">
@@ -95,6 +102,34 @@ export default async function FundPage({
             </div>
             <FactBlock title="Minimum" body={fund.minInvestment ?? "Not stated"} />
             <FactBlock title="Distributions" body={fund.distributions} />
+            <div className="rounded-xl border border-border bg-card p-4 sm:col-span-2">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                GENIUS Act reserve collateral
+              </p>
+              <p className="mt-1 font-serif text-2xl">{genius.reserve}</p>
+              <p className="mt-1 text-sm leading-6">{GENIUS_HINT[genius.reserve]}</p>
+              <dl className="mt-3 grid gap-3 sm:grid-cols-3 text-sm">
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">WAM</dt>
+                  <dd className="mt-0.5 font-medium tabular-nums">{formatGeniusWad(genius.wadDays)}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Daily analog</dt>
+                  <dd className="mt-0.5 font-medium tabular-nums">
+                    {genius.dailyPct === null ? "—" : formatPct(genius.dailyPct, 0)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Weekly analog</dt>
+                  <dd className="mt-0.5 font-medium tabular-nums">
+                    {genius.weeklyPct === null ? "—" : formatPct(genius.weeklyPct, 0)}
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {genius.note}
+              </p>
+            </div>
           </div>
           {fund.notes ? (
             <div className="rounded-xl border border-border bg-muted/40 p-4 text-sm leading-6">
@@ -105,6 +140,9 @@ export default async function FundPage({
         <aside className="space-y-6">
           <div>
             <h2 className="font-serif text-2xl">Top holdings</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Weight and remaining tenor from the QFU date (call = 0).
+            </p>
             {fund.holdings.length === 0 ? (
               <p className="mt-2 text-sm text-muted-foreground">
                 Holdings were not captured in the filing extract. The full
@@ -125,8 +163,13 @@ export default async function FundPage({
                         </span>
                       ) : null}
                     </span>
-                    <span className="tabular-nums text-muted-foreground">
-                      {holding.weight > 0 ? formatPct(holding.weight, 2) : "—"}
+                    <span className="text-right tabular-nums text-muted-foreground">
+                      <span className="block">
+                        {holding.weight > 0 ? formatPct(holding.weight, 2) : "—"}
+                      </span>
+                      <span className="block text-xs">
+                        {formatHoldingTenor(holdingTenorDays(holding, asOf, funds))}
+                      </span>
                     </span>
                   </li>
                 ))}

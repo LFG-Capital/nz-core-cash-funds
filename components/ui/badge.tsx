@@ -15,6 +15,9 @@ const badgeVariants = cva(
         etf: "border-transparent bg-amber-100 text-amber-900",
         work: "border-transparent bg-violet-100 text-violet-900",
         closed: "border-transparent bg-stone-200 text-stone-700",
+        pass: "border-transparent bg-emerald-100 text-emerald-900",
+        warn: "border-transparent bg-amber-100 text-amber-950",
+        fail: "border-transparent bg-rose-100 text-rose-900",
       },
     },
     defaultVariants: {

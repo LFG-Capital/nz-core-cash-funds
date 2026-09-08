@@ -72,6 +72,62 @@ export default function MethodologyPage() {
           settle like the underlying cash book. <strong>Closed</strong> is
           existing investors only.
         </p>
+        <h2 className="font-serif text-2xl">GENIUS Act reserve screen</h2>
+        <p>
+          The GENIUS Act (Pub. L. 119–27, 12 U.S.C. § 5903) lets a permitted
+          payment stablecoin issuer hold reserves only in US currency and
+          Federal Reserve balances; demand deposits withdrawable on request at
+          insured depository institutions; Treasuries with remaining or
+          original maturity of 93 days or less; overnight Treasury repo or
+          reverse repo; government money-market funds invested solely in those
+          assets; and other similarly liquid federal assets if a federal
+          regulator later approves them. Corporate paper, longer Treasuries,
+          foreign sovereigns and crypto (other than tokenized permitted
+          assets) are out. These NZ cash funds are NZD PIEs, not 1940 Act
+          government MMFs, so none of them is a permitted US reserve
+          instrument in its own right.
+        </p>
+        <p>
+          Duration is scored as{" "}
+          <strong>portfolio weighted-average remaining maturity</strong> of
+          the named book — the same idea as the Act’s monthly “average tenor”
+          disclosure and the OCC’s March 2026 proposed weighted-average
+          maturity (WAM) test — not as “any single name longer than 93 days
+          fails.” The formula is WAM = Σ (weight × remaining tenor) / Σ
+          weight, using only holdings with a measurable tenor. Call cash and
+          on-call deposits are 0 days. Notice paper uses the notice period
+          (a 45-day notice deposit is 45 days, not demand). Dated bills, TDs
+          and bonds use calendar days from the QFU as-of date to legal
+          maturity. FRN interest-rate resets do not shorten tenor; GENIUS
+          does not adopt SEC Rule 2a-7 reset-shortening. Residual unnamed
+          holdings are left out of the average. They are not assumed to be
+          overnight.
+        </p>
+        <p>
+          Liquidity is a separate analog of the OCC proposal (comment closed
+          about 1 May 2026; not final). Daily liquidity is paper payable
+          immediately (call / demand). Weekly liquidity is paper
+          unconditionally due within five business days (treated here as ≤7
+          calendar days). The remainder of a permitted reserve book would
+          have to sit in other allowed assets, each Treasury still capped at
+          93 days. The OCC diversification safe harbor / Option B would also
+          cap the <em>portfolio</em> WAM at 20 days. The 93-day figure in
+          the statute is a per-Treasury cap, not a substitute for that
+          portfolio average.
+        </p>
+        <p>
+          <strong>Yes</strong> means no hard-ineligible assets and a measured
+          WAM of 20 days or less on a meaningful named extract (or a 100%
+          call-cash book). <strong>Partial</strong> means a cash-equivalent
+          book whose WAM is inside 93 days, or an incomplete extract that
+          should not be failed on a thin slice of long names.{" "}
+          <strong>No</strong> means measured WAM above 93 days on a
+          substantial named book, or disclosed mortgages, corporate CP,
+          infrastructure credit or multi-year government stock. A single
+          99-day term deposit does not fail the fund if the value-weighted
+          average stays inside the band. This is research, not legal advice
+          and not a determination that an issuer may hold the fund.
+        </p>
         <h2 className="font-serif text-2xl">Performance convention</h2>
         <p>
           Mindful Money and Sorted publish after-fees-and-tax annual returns
@@ -111,6 +167,16 @@ export default function MethodologyPage() {
           <li>
             <a className="text-primary hover:underline" href="https://managedfunds.nz/asset-class/cash/funds/">
               ManagedFundsNZ cash category
+            </a>
+          </li>
+          <li>
+            <a className="text-primary hover:underline" href="https://www.congress.gov/119/plaws/publ27/PLAW-119publ27.pdf">
+              GENIUS Act, Pub. L. 119–27 (permitted reserves)
+            </a>
+          </li>
+          <li>
+            <a className="text-primary hover:underline" href="https://www.federalregister.gov/documents/2026/03/02/2026-04089/implementing-the-guiding-and-establishing-national-innovation-for-us-stablecoins-act-for-the">
+              OCC March 2026 GENIUS implementing proposal (daily / weekly liquidity and 20-day WAM)
             </a>
           </li>
         </ul>

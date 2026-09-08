@@ -32,6 +32,22 @@ export const SETTLEMENT_HINT: Record<Settlement, string> = {
   Closed: "Existing investors only",
 };
 
+/**
+ * GENIUS Act reserve-collateral analog (liquidity and duration only).
+ * Duration is the portfolio weighted-average remaining maturity of named
+ * holdings, scored in lib/genius.ts. Not a legal determination that a US
+ * permitted payment stablecoin issuer may hold the fund.
+ */
+export type GeniusReserve = "Yes" | "Partial" | "No";
+
+export const GENIUS_RESERVES: GeniusReserve[] = ["Yes", "Partial", "No"];
+
+export const GENIUS_HINT: Record<GeniusReserve, string> = {
+  Yes: "WAM ≤ 20 days; no ineligible assets",
+  Partial: "WAM ≤ 93 days, or the extract is incomplete",
+  No: "WAM above 93 days, or ineligible asset types",
+};
+
 export type Holding = {
   name: string;
   weight: number;

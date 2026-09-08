@@ -15,8 +15,12 @@ export default function FundsPage() {
         Retail PIEs, the NZX cash ETF, KiwiSaver cash options and workplace
         super sleeves. Liquidity is the typical cash-available settlement after
         a valid redemption: T+0 same-day, T+1 next business day, T+2 / T+3
-        standard PIE or NZX settlement. KiwiSaver is Restricted. Open a fund
-        for mandate, holdings, annual returns and sources.
+        standard PIE or NZX settlement. KiwiSaver is Restricted. GENIUS
+        reserve scores the named book against US permitted-reserve liquidity
+        and duration: daily/weekly buckets and a value-weighted remaining
+        maturity (WAM), not a single-name 93-day fail. It is not a
+        US-eligibility opinion. Open a fund for mandate, holdings, annual
+        returns and sources.
       </p>
       <div className="mt-8">
         <FundsExplorer />
