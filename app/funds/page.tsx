@@ -13,9 +13,10 @@ export default function FundsPage() {
       <h1 className="mt-2 font-serif text-4xl">All documented NZ cash funds</h1>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
         Retail PIEs, the NZX cash ETF, KiwiSaver cash options and workplace
-        super sleeves. Open a fund for mandate, holdings, annual returns and
-        sources. Empty cells mean the manager has not published that figure in
-        the filings we could reach.
+        super sleeves. Liquidity is the typical cash-available settlement after
+        a valid redemption: T+0 same-day, T+1 next business day, T+2 / T+3
+        standard PIE or NZX settlement. KiwiSaver is Restricted. Open a fund
+        for mandate, holdings, annual returns and sources.
       </p>
       <div className="mt-8">
         <FundsExplorer />

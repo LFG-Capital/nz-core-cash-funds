@@ -57,6 +57,21 @@ export default function MethodologyPage() {
             extract. They may still exist on Disclose.
           </li>
         </ul>
+        <h2 className="font-serif text-2xl">Liquidity convention</h2>
+        <p>
+          The table uses a compact settlement code for typical cash available
+          after a valid redemption instruction, not the legal maximum in a PDS
+          (often “within 10 business days”). <strong>T+0</strong> is same-day /
+          on-call access (Sharesies PIE Save, Booster Enhanced Cash, Wedge).{" "}
+          <strong>T+1</strong> is next-business-day dealing (Kernel, Simplicity,
+          MAS). <strong>T+2</strong> is the default for daily-dealing retail
+          PIEs, workplace super sleeves and the NZX cash ETF.{" "}
+          <strong>T+3</strong> is used where the manager states cash in three
+          further business days (Clarity). <strong>Restricted</strong> means
+          KiwiSaver withdrawal rules; intra-scheme switches still usually
+          settle like the underlying cash book. <strong>Closed</strong> is
+          existing investors only.
+        </p>
         <h2 className="font-serif text-2xl">Performance convention</h2>
         <p>
           Mindful Money and Sorted publish after-fees-and-tax annual returns

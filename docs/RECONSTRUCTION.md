@@ -23,7 +23,7 @@ A Next.js research desk that lists dedicated New Zealand **core cash / money-mar
 - 3-year and 1-year returns after fees and tax (Sorted / Mindful Money convention)
 - optional 1-year after fees before tax (manager fact-sheet convention)
 - annual return history (year to 31 March)
-- mandate text, benchmark, target/actual mix, liquidity, minimum, distributions
+- mandate text, benchmark, target/actual mix, liquidity, settlement (T+0 / T+1 / T+2 / T+3 / Restricted / Closed), minimum, distributions
 - top holdings
 - source URLs plus a Disclose Register search link
 
@@ -32,7 +32,7 @@ The live app has four routes:
 | Route | Purpose |
 |---|---|
 | `/` | Market briefing, stat cards, largest sleeves, cheapest open products |
-| `/funds` | Filterable table (search, vehicle, mandate style, sort) |
+| `/funds` | Filterable table (search, vehicle, mandate style, liquidity, sort) |
 | `/funds/[slug]` | Full fact sheet |
 | `/methodology` | Scope, conventions, canonical links |
 

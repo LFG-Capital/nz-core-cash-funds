@@ -144,6 +144,12 @@ export default function HomePage() {
                 single quarter.
               </li>
               <li>
+                <strong className="text-foreground">Liquidity</strong> is typical
+                cash-available settlement (T+0 same-day, T+1, T+2, T+3).
+                KiwiSaver withdrawals stay Restricted even when the sleeve
+                itself is cash.
+              </li>
+              <li>
                 Bank on-call PIEs and term-deposit PIEs sold as deposit products
                 are out of scope unless they file as a managed investment
                 scheme.

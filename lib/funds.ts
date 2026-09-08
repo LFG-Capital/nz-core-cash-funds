@@ -11,6 +11,27 @@ export type Style =
   | "Bank-deposit PIE"
   | "Cash-plus / short duration";
 
+/** Typical cash-available settlement after a valid redemption instruction. */
+export type Settlement = "T+0" | "T+1" | "T+2" | "T+3" | "Restricted" | "Closed";
+
+export const SETTLEMENTS: Settlement[] = [
+  "T+0",
+  "T+1",
+  "T+2",
+  "T+3",
+  "Restricted",
+  "Closed",
+];
+
+export const SETTLEMENT_HINT: Record<Settlement, string> = {
+  "T+0": "Same-day / on-call",
+  "T+1": "Next business day",
+  "T+2": "Two business days",
+  "T+3": "Three business days",
+  Restricted: "KiwiSaver withdrawal rules",
+  Closed: "Existing investors only",
+};
+
 export type Holding = {
   name: string;
   weight: number;
@@ -49,6 +70,7 @@ export type Fund = {
   targetMix: string;
   actualMix?: string;
   liquidity: string;
+  settlement: Settlement;
   minInvestment: string | null;
   distributions: string;
   holdings: Holding[];
@@ -90,6 +112,7 @@ export const funds: Fund[] = [
     targetMix: "20% cash / 80% NZ fixed interest",
     actualMix: "15.4% cash, 77.4% NZ FI, 7.3% intl FI (31 Mar 2026)",
     liquidity: "Daily dealing; typical cash-fund settlement of a few business days",
+    settlement: "T+2",
     minInvestment: "$1,000",
     distributions: "Accumulating (unit price compounds daily)",
     holdings: [
@@ -136,6 +159,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "On-call / same-scheme dealing",
+    settlement: "T+0",
     minInvestment: "Via Booster Investment Scheme",
     distributions: "Accumulating",
     holdings: [
@@ -180,6 +204,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "About 74% cash / remainder short NZ fixed interest (31 Mar 2026)",
     liquidity: "Daily dealing",
+    settlement: "T+2",
     minInvestment: "Via platforms and Amova scheme",
     distributions: "Income-oriented",
     holdings: [
@@ -225,6 +250,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Daily dealing via SuperLife Invest",
+    settlement: "T+2",
     minInvestment: "Via SuperLife / Smart",
     distributions: "Accumulating",
     holdings: [
@@ -270,6 +296,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Daily dealing; also used as an InvestNow feeder",
+    settlement: "T+2",
     minInvestment: "Via Mercer / InvestNow / platforms",
     distributions: "Accumulating",
     holdings: [
@@ -314,6 +341,7 @@ export const funds: Fund[] = [
     targetMix: "45% cash / 55% NZ fixed interest",
     actualMix: "27.4% cash / 72.6% NZ FI (31 Mar 2026)",
     liquidity: "Daily; core holding of highly liquid securities for cash-flow",
+    settlement: "T+2",
     minInvestment: "Via platforms (Consilium and others)",
     distributions: "Accumulating",
     holdings: [
@@ -356,6 +384,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "92.1% cash / 7.9% NZ FI (31 Mar 2026)",
     liquidity: "Daily via Kernel",
+    settlement: "T+1",
     minInvestment: "$1",
     distributions: "Accumulating",
     holdings: [
@@ -394,6 +423,7 @@ export const funds: Fund[] = [
     benchmark: "Cash / cash-equivalent peer group",
     targetMix: "Cash and cash equivalents",
     liquidity: "Daily via NZ Funds",
+    settlement: "T+2",
     minInvestment: "Via NZ Funds",
     distributions: "Accumulating",
     holdings: [],
@@ -428,6 +458,7 @@ export const funds: Fund[] = [
     actualMix: "About 92% cash / 8% NZ FI (31 Mar 2026)",
     liquidity:
       "Same-day processing if received by 1pm; cash typically available within three further business days. No buy/sell spread.",
+    settlement: "T+3",
     minInvestment: "Via Clarity / advisers",
     distributions: "Quarterly",
     holdings: [
@@ -469,6 +500,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Via BNZ Private Wealth",
+    settlement: "T+2",
     minInvestment: "BNZ Private Wealth relationship",
     distributions: "Accumulating",
     holdings: [],
@@ -502,6 +534,7 @@ export const funds: Fund[] = [
     targetMix: "65% cash / 35% NZ fixed interest",
     actualMix: "57.7% cash / 42.3% NZ FI (31 Mar 2026)",
     liquidity: "Daily via Octagon / Forsyth Barr",
+    settlement: "T+2",
     minInvestment: "Via Octagon / platforms",
     distributions: "Accumulating",
     holdings: [],
@@ -533,6 +566,7 @@ export const funds: Fund[] = [
     benchmark: "NZ bank on-call savings rates",
     targetMix: "Cash, cash equivalents and fixed interest",
     liquidity: "Ready access (savings-style PIE)",
+    settlement: "T+0",
     minInvestment: "Via Wedge",
     distributions: "Marketed as a savings-style return",
     holdings: [
@@ -574,6 +608,7 @@ export const funds: Fund[] = [
     targetMix: "100% NZ bank deposits (AA-)",
     actualMix: "100% ANZ NZD cash call account (30 Jun 2026 QFU)",
     liquidity: "Easy access via Sharesies; monthly unit distributions",
+    settlement: "T+0",
     minInvestment: "Via Sharesies (no traditional minimum)",
     distributions: "Monthly, by issuing new units",
     holdings: [{ name: "NZD cash call account (ANZ Bank)", weight: 100, type: "AA bank deposit" }],
@@ -610,6 +645,7 @@ export const funds: Fund[] = [
     targetMix: "100% income / cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Daily; $1 minimum",
+    settlement: "T+1",
     minInvestment: "$1",
     distributions: "Accumulating",
     holdings: [
@@ -655,6 +691,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "NZX-listed; brokerage and bid/ask apply",
+    settlement: "T+2",
     minInvestment: "1 share via NZX / brokers",
     distributions: "ETF distribution policy (check current fact sheet)",
     holdings: [
@@ -695,6 +732,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Daily; no term-deposit break fees",
+    settlement: "T+1",
     minInvestment: "Via MAS",
     distributions: "Accumulating",
     holdings: [],
@@ -729,6 +767,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents",
     actualMix: "100% cash and cash equivalents",
     liquidity: "Daily via AMP Investment Trust",
+    settlement: "T+2",
     minInvestment: "Via AMP",
     distributions: "Accumulating",
     holdings: [
@@ -766,6 +805,7 @@ export const funds: Fund[] = [
     benchmark: "Underlying Octagon cash sleeve",
     targetMix: "Cash, cash equivalents and short NZ FI via underlying fund",
     liquidity: "Via Tempo",
+    settlement: "T+2",
     minInvestment: "Via Tempo",
     distributions: "Accumulating",
     holdings: [],
@@ -804,6 +844,7 @@ export const funds: Fund[] = [
     targetMix: "100% cash and cash equivalents (duration < 6 months in underlying)",
     actualMix: "100% cash classification; holdings include short NZ FI",
     liquidity: "Daily via Fisher Funds",
+    settlement: "T+2",
     minInvestment: "Via Fisher Funds",
     distributions: "Accumulating",
     holdings: [
@@ -842,6 +883,7 @@ export const funds: Fund[] = [
     benchmark: "Short-term income / <1 year maturity",
     targetMix: "Income assets < 1 year",
     liquidity: "Daily via Generate",
+    settlement: "T+2",
     minInvestment: "Via Generate",
     distributions: "Accumulating",
     holdings: [{ name: "BNZ Jun 2026 bonds", weight: 0 }],
@@ -874,6 +916,7 @@ export const funds: Fund[] = [
     benchmark: "Bloomberg NZBond Bank Bill / Mercer cash composite",
     targetMix: "100% cash and cash equivalents",
     liquidity: "Via Mercer FlexiSaver",
+    settlement: "T+2",
     minInvestment: "Scheme membership",
     distributions: "Accumulating",
     holdings: [],
@@ -906,6 +949,7 @@ export const funds: Fund[] = [
     benchmark: "Cash / short-term deposits",
     targetMix: "100% cash and cash equivalents",
     liquidity: "Existing investors only",
+    settlement: "Closed",
     minInvestment: "Closed",
     distributions: "Accumulating",
     holdings: [],
@@ -937,6 +981,7 @@ export const funds: Fund[] = [
     targetMix: "100% Fisher Institutional NZ Cash Fund",
     actualMix: "98.47% Fisher Institutional NZ Cash; 1.53% cash at bank",
     liquidity: "Via Lifetime Superannuation Master Trust",
+    settlement: "T+2",
     minInvestment: "$1,000",
     distributions: "None (accumulating)",
     holdings: [{ name: "Fisher Institutional New Zealand Cash Fund", weight: 98.47 }],
@@ -969,6 +1014,7 @@ export const funds: Fund[] = [
     benchmark: "NZ cash / short-term FI",
     targetMix: "100% cash and cash equivalents",
     liquidity: "Daily via Fisher Premium series",
+    settlement: "T+2",
     minInvestment: "Via Fisher Premium",
     distributions: "Accumulating",
     holdings: [
@@ -1011,6 +1057,7 @@ export const funds: Fund[] = [
     benchmark: "S&P/NZX Call Rate Deposit Index (current market index)",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1052,6 +1099,7 @@ export const funds: Fund[] = [
     targetMix: "100% income assets (cash and equivalents)",
     actualMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1095,6 +1143,7 @@ export const funds: Fund[] = [
     benchmark: "Short-term money-market / bank bills",
     targetMix: "100% short-term income assets",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1133,6 +1182,7 @@ export const funds: Fund[] = [
     benchmark: "NZ cash / short-term FI",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1171,6 +1221,7 @@ export const funds: Fund[] = [
     benchmark: "NZ short-term cash securities",
     targetMix: "100% income / cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1209,6 +1260,7 @@ export const funds: Fund[] = [
     benchmark: "Official Cash Rate (OCR)",
     targetMix: "NZ cash, short-dated debt and term deposits",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1250,6 +1302,7 @@ export const funds: Fund[] = [
     benchmark: "Cash / short-term deposits",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [],
@@ -1280,6 +1333,7 @@ export const funds: Fund[] = [
     benchmark: "Short-term income / <1 year",
     targetMix: "100% income assets < 1 year",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1314,6 +1368,7 @@ export const funds: Fund[] = [
     benchmark: "Cash / short-term deposits",
     targetMix: "100% cash and cash equivalents",
     liquidity: "Via AMP NZ Retirement Trust",
+    settlement: "T+2",
     minInvestment: "Workplace scheme membership",
     distributions: "Accumulating",
     holdings: [
@@ -1354,6 +1409,7 @@ export const funds: Fund[] = [
     benchmark: "S&P/NZX Bank Bill 90-Day Index",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [],
@@ -1385,6 +1441,7 @@ export const funds: Fund[] = [
     benchmark: "S&P/NZX Bank Bills 90-Day Total Return Index",
     targetMix: "100% cash and cash equivalents",
     liquidity: "Via SuperLife Superannuation Master Trust",
+    settlement: "T+2",
     minInvestment: "Scheme membership",
     distributions: "Accumulating",
     holdings: [
@@ -1418,6 +1475,7 @@ export const funds: Fund[] = [
     benchmark: "S&P/NZX Call Rate Deposit Index",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "Default KiwiSaver allocation",
     distributions: "Accumulating",
     holdings: [],
@@ -1454,6 +1512,7 @@ export const funds: Fund[] = [
     benchmark: "Bloomberg NZBond Bank Bill Index",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [
@@ -1488,6 +1547,7 @@ export const funds: Fund[] = [
     benchmark: "Bloomberg NZBond Bank Bill Index",
     targetMix: "100% cash and cash equivalents",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "$1",
     distributions: "Accumulating",
     holdings: [],
@@ -1518,6 +1578,7 @@ export const funds: Fund[] = [
     benchmark: "Official Cash Rate (OCR)",
     targetMix: "Cash, cash equivalents and short NZ debt",
     liquidity: "KiwiSaver restricted withdrawals",
+    settlement: "Restricted",
     minInvestment: "Summer KiwiSaver membership",
     distributions: "Accumulating",
     holdings: [],

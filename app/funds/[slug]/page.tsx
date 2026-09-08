@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { funds, getFund } from "@/lib/funds";
+import { SETTLEMENT_HINT, funds, getFund } from "@/lib/funds";
 import { vehicleBadge } from "@/lib/labels";
 import { formatDate, formatNzdMillion, formatPct } from "@/lib/utils";
 
@@ -83,7 +83,16 @@ export default async function FundPage({
             <FactBlock title="Benchmark" body={fund.benchmark} />
             <FactBlock title="Target mix" body={fund.targetMix} />
             <FactBlock title="Actual mix" body={fund.actualMix ?? "See latest QFU"} />
-            <FactBlock title="Liquidity" body={fund.liquidity} />
+            <div className="rounded-xl border border-border bg-card p-4">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                Liquidity
+              </p>
+              <p className="mt-1 font-serif text-2xl tabular-nums">{fund.settlement}</p>
+              <p className="mt-1 text-sm leading-6">{SETTLEMENT_HINT[fund.settlement]}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {fund.liquidity}
+              </p>
+            </div>
             <FactBlock title="Minimum" body={fund.minInvestment ?? "Not stated"} />
             <FactBlock title="Distributions" body={fund.distributions} />
           </div>
